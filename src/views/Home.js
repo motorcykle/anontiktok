@@ -5,11 +5,23 @@ import db from '../firebase';
 
 
 const Home = () => {
-  const [uploads, loading, error] = useCollection(db.collection('uploads'));
+  const [uploads, setUploads] = useState([]);
+
+  useEffect(() => {
+    db.collection('users').get().then(data => {
+      data.docs.forEach(user => {
+        user.ref.collection('uploads').get().then(data => {
+          setUploads(prev => [...prev, ...data.docs.map(upload => ({  id: upload.id, ...upload.data()}))])
+        }).catch(err => console.log(err))
+      })
+    }).catch(err => console.log(err))
+  }, [])
+
+  useEffect(() => console.log(uploads), [uploads])
 
   return (
-    <div className="h-full overflow-scroll bg-gray-600 snap snap-y snap-mandatory">
-      { uploads?.docs.map(upload => ({ id: upload.id, ...upload.data()})).map(upload => (
+    <div className="h-full overflow-scroll bg-gray-600 snap snap-y snap-mandatory container mx-auto">
+      { uploads?.map(upload => (
         <FeedItem data={upload} key={upload.id} />
       )) }
     </div>

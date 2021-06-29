@@ -25,8 +25,8 @@ const FeedItem = ({ data }) => {
         onClick={onVideoPress}
         loop
         ref={videoRef}
-        src={"https://v77.tiktokcdn.com/5fbf940aaa25a47067bd475f2bc5f062/601f327b/video/tos/useast2a/tos-useast2a-ve-0068c003/77f607dff5374fd1af63668602742e25/?a=1233&br=1040&bt=520&cd=0%7C0%7C1&ch=0&cr=0&cs=0&cv=1&dr=0&ds=3&er=&l=202102061820590101890730191CEA7FEE&lr=tiktok_m&mime_type=video_mp4&pl=0&qs=0&rc=anc8c3BueTtlMzMzZDczM0ApMzM4OWZmPDs7Nzs3NDo7aWcuMl9kYHNnLTBgLS00MTZzczAzNTJiLTE0Xy1gNWM2NS46Yw%3D%3D&vl=&vr="}
-        className="object-contain w-full">
+        src={data.video_url}
+        className="h-full mx-auto object-contain">
         </video>
       </div>
       <div className="videoInfo__container overflow-hidden absolute sm:static top-0 left-0 w-full h-full p-6 space-x-3 flex items-end justify-end sm:space-y-9 sm:flex-col">
@@ -39,7 +39,7 @@ const FeedItem = ({ data }) => {
         {/* DIVIDE THE BELLOW TO TWO COMPONENTS */}
         {/* DIVIDE THE BELLOW TO TWO COMPONENTS */}
 
-        <div className="videoInfo__text text-white sm:w-full overflow-hidden">
+        <div className="videoInfo__text text-white w-full overflow-hidden">
           <p className="font-bold">@anonymous</p>
           <p className="my-2">{data.description}</p>
           <div className="videoFooter__ticker flex items-center">

@@ -18,6 +18,7 @@ const Upload = () => {
     const userUploadsRef = db.collection('users').doc(user.uid).collection('uploads');
     if (videoToPost && user.uid) {
       userUploadsRef.add({
+        uid: user.uid,
         audio_name: audioNameRef.current.value || 'original sound - anonymous',
         description: descRef.current.value || '#anontiktok',
         likes: [],
