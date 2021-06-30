@@ -50,7 +50,6 @@ const FeedItem = ({ data }) => {
         <video
         onClick={onVideoPress}
         loop
-        controls
         ref={videoRef}
         src={data.video_url}
         className="h-full mx-auto object-contain">
