@@ -1,12 +1,38 @@
 import React, { useEffect, useRef, useState } from 'react';
+import firebase from 'firebase';
 import Ticker from 'react-ticker';
-import { MusicNoteIcon, HeartIcon, ChatIcon, ShareIcon } from '@heroicons/react/solid';
+import { MusicNoteIcon, HeartIcon, ChatIcon, ShareIcon, CheckIcon } from '@heroicons/react/solid';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import db, { auth } from '../firebase';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../features/appSlice';
 
 
 
 const FeedItem = ({ data }) => {
+  const [user] = useAuthState(auth);
+  const userInfo = useSelector(selectUser);
   const [playing, setPlaying] = useState(false);
   const videoRef = useRef(null);
+
+  function followToggle () {
+    const refTing = db.collection('users');
+    if (userInfo?.following.includes(data?.uid)) {
+      refTing.doc(user?.uid).update({
+        following: firebase.firestore.FieldValue.arrayRemove(data?.uid)
+      });
+      refTing.doc(data?.uid).update({
+        followers: firebase.firestore.FieldValue.arrayRemove(user?.uid)
+      });
+    } else {
+      refTing.doc(user?.uid).update({
+        following: firebase.firestore.FieldValue.arrayUnion(data?.uid)
+      });
+      refTing.doc(data?.uid).update({
+        followers: firebase.firestore.FieldValue.arrayUnion(user?.uid)
+      });
+    }
+  }
 
   function onVideoPress () {
     if (playing) {
@@ -29,15 +55,7 @@ const FeedItem = ({ data }) => {
         className="h-full mx-auto object-contain">
         </video>
       </div>
-      <div className="videoInfo__container overflow-hidden absolute sm:static top-0 left-0 w-full h-full p-6 space-x-3 flex items-end justify-end sm:space-y-9 sm:flex-col">
-
-        {/* DIVIDE THE BELLOW TO TWO COMPONENTS */}
-        {/* DIVIDE THE BELLOW TO TWO COMPONENTS */}
-        {/* DIVIDE THE BELLOW TO TWO COMPONENTS */}
-        {/* DIVIDE THE BELLOW TO TWO COMPONENTS */}
-        {/* DIVIDE THE BELLOW TO TWO COMPONENTS */}
-        {/* DIVIDE THE BELLOW TO TWO COMPONENTS */}
-        {/* DIVIDE THE BELLOW TO TWO COMPONENTS */}
+      <div onClick={onVideoPress} className="videoInfo__container overflow-hidden absolute sm:static top-0 left-0 w-full h-full p-6 space-x-3 flex items-end justify-end sm:space-y-9 sm:flex-col">
 
         <div className="videoInfo__text text-white w-full overflow-hidden">
           <p className="font-bold">@anonymous</p>
@@ -56,15 +74,15 @@ const FeedItem = ({ data }) => {
           </div>
         </div>
 
-        <div className="videoInfo__sidebar flex flex-col sm:flex-row sm:justify-between sm:w-full space-y-3 items-center">
-          <div className="user_follow">
-            <button className="relative">
+        <div onClick={(e) => e.stopPropagation()} className="videoInfo__sidebar flex flex-col sm:flex-row sm:justify-between sm:w-full space-y-3 items-center">
+          {user?.uid !== data?.uid && <div className="user_follow">
+            <button className="relative" onClick={followToggle}>
               <div className="h-10 w-10 bg-white border-2 rounded-full"></div>
-              <p className="h-5 w-5 rounded-full text-white bg-red-500 flex justify-center items-center pb-1 absolute -bottom-2 left-1/4 font-bold">
-                +
+              <p className="h-5 w-5 rounded-full text-white bg-red-500 flex justify-center items-center absolute -bottom-2 left-1/4 font-bold">
+                {userInfo?.following.includes(data?.uid) ? <CheckIcon className="h-3" /> : '+'}
               </p>
             </button>
-          </div>
+          </div>}
           <div className="video_like grid place-items-center">
             <button>
               <HeartIcon className="h-10 text-white" />

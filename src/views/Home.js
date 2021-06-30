@@ -8,6 +8,7 @@ const Home = () => {
   const [uploads, setUploads] = useState([]);
 
   useEffect(() => {
+
     db.collection('users').get().then(data => {
       data.docs.forEach(user => {
         user.ref.collection('uploads').get().then(data => {
@@ -15,9 +16,8 @@ const Home = () => {
         }).catch(err => console.log(err))
       })
     }).catch(err => console.log(err))
-  }, [])
 
-  useEffect(() => console.log(uploads), [uploads])
+  }, [])
 
   return (
     <div className="h-full overflow-scroll bg-gray-600 snap snap-y snap-mandatory container mx-auto">

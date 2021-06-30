@@ -8,7 +8,7 @@ import db, { auth } from '../firebase';
 const Profile = () => {
   const userInfo = useSelector(selectUser);
   const [user] = useAuthState(auth);
-  const [uploads, loading, error] = useCollection(db.collection('users').doc(user?.uid).collection('uploads'));
+  const [uploads, loading, error] = useCollection(db.collection('users').doc(user?.uid).collection('uploads').orderBy('timestamp', 'desc'))
 
   return (
     <div className="">
